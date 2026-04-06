@@ -1,5 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { IsNotEmpty } from "class-validator";
+import { Tema } from "../../tema/entities/tema.entity";
 
 @Entity({ name: "tb_postagem" }) // Cria uma tabela chamada tb_postagem
 export class Postagem {
@@ -17,4 +18,9 @@ export class Postagem {
 
   @UpdateDateColumn() // Cria uma coluna chamada data atualização da postagem e nao pode ser nulo
   data!: Date;
+
+
+  @ManyToOne(() => Tema, (tema) => tema.postagens)
+  @JoinColumn({ name: "tema_id" })
+  tema!: Tema;
 }

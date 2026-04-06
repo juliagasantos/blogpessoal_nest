@@ -5,6 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Postagem } from './postagem/entities/postagem.entity';
 import { PostagemModule } from './postagem/postagem.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TemaModule } from './tema/tema.module';
+import { Tema } from './tema/entities/tema.entity';
 
 @Module({
   imports: [
@@ -27,9 +29,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     }),
 
     PostagemModule,
+    TemaModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
 
-export class AppModule {}
+export class AppModule { }

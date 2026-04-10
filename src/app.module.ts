@@ -7,6 +7,8 @@ import { PostagemModule } from './postagem/postagem.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TemaModule } from './tema/tema.module';
 import { Tema } from './tema/entities/tema.entity';
+import { AuthModule } from './auth/auth.module';
+import { UsuarioModule } from './usuario/usuario.module';
 
 @Module({
   imports: [
@@ -30,6 +32,8 @@ import { Tema } from './tema/entities/tema.entity';
 
     PostagemModule,
     TemaModule,
+    AuthModule,
+    UsuarioModule
   ],
   controllers: [AppController],
   providers: [AppService],

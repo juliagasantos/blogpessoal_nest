@@ -1,40 +1,47 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
-import { Postagem } from '../entities/postagem.entity';
-import { PostagemService } from '../services/postagem.service';
+import { Controller, Get, Post, Put, Delete, HttpCode, HttpStatus, Param, Body, HttpException, UseGuards, ParseIntPipe } from "@nestjs/common";
+import { JwtAuthGuard } from "../../auth/guard/jwt-auth.guard";
+import { Postagem } from "../entities/postagem.entity";
+import { PostagemService } from "../services/postagem.service";
 
-
-@Controller('/postagens')
+@UseGuards(JwtAuthGuard)
+@Controller("/postagens")
 export class PostagemController {
-
   constructor(private readonly postagemService: PostagemService) { }
 
   @Get()
+  @HttpCode(HttpStatus.OK)
   findAll(): Promise<Postagem[]> {
     return this.postagemService.findAll();
   }
 
   @Get('/:id')
-  findById(@Param('id') id: number) {
+  @HttpCode(HttpStatus.OK)
+  findById(@Param('id', ParseIntPipe) id: number): Promise<Postagem> {
     return this.postagemService.findById(id);
   }
 
   @Get('/titulo/:titulo')
-  findByTitulo(@Param('titulo') titulo: string) {
+  @HttpCode(HttpStatus.OK)
+  findAllByTitulo(@Param('titulo') titulo: string): Promise<Postagem[]> {
     return this.postagemService.findByTitulo(titulo);
   }
 
   @Post()
-  create(@Body() postagem: Postagem) {
+  @HttpCode(HttpStatus.CREATED)
+  create(@Body() postagem: Postagem): Promise<Postagem> {
     return this.postagemService.create(postagem);
   }
 
   @Put()
-  update(@Body() postagem: Postagem) {
+  @HttpCode(HttpStatus.OK)
+  update(@Body() postagem: Postagem): Promise<Postagem> {
     return this.postagemService.update(postagem);
   }
 
   @Delete('/:id')
-delete(@Param('id') id: number) {
-  return this.postagemService.delete(id);
-}
+  @HttpCode(HttpStatus.NO_CONTENT)
+  delete(@Param('id', ParseIntPipe) id: number){
+    return this.postagemService.delete(id);
+  }
+
 }

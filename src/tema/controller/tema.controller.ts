@@ -1,39 +1,47 @@
-import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
-import { TemaService } from '../services/tema.service';
-import { Tema } from '../entities/tema.entity';
+import { Body, Controller, Delete, Get, HttpCode, HttpException, HttpStatus, Param, ParseIntPipe, Post, Put, UseGuards } from "@nestjs/common";
+import { JwtAuthGuard } from "../../auth/guard/jwt-auth.guard";
+import { Tema } from "../entities/tema.entity";
+import { TemaService } from "../services/tema.service";
 
-@Controller('temas')
+@UseGuards(JwtAuthGuard)
+@Controller("/temas")
 export class TemaController {
-
-  constructor(private readonly temaService: TemaService) {}
+  constructor(private readonly temaService: TemaService) { }
 
   @Get()
-  findAll() {
+  @HttpCode(HttpStatus.OK)
+  findAll(): Promise<Tema[]> {
     return this.temaService.findAll();
   }
 
-  @Get(':id')
-  findById(@Param('id') id: number) {
+  @Get('/:id')
+  @HttpCode(HttpStatus.OK)
+  findById(@Param('id', ParseIntPipe) id: number): Promise<Tema | null> {
     return this.temaService.findById(id);
   }
 
   @Get('/descricao/:descricao')
-  findByDescricao(@Param('descricao') descricao: string) {
+  @HttpCode(HttpStatus.OK)
+  findAllBydescricao(@Param('descricao') descricao: string): Promise<Tema[]> {
     return this.temaService.findByDescricao(descricao);
   }
 
   @Post()
-  create(@Body() tema: Tema) {
-    return this.temaService.create(tema);
+  @HttpCode(HttpStatus.CREATED)
+  create(@Body() Tema: Tema): Promise<Tema> {
+    return this.temaService.create(Tema);
   }
 
   @Put()
-  update(@Body() tema: Tema) {
-    return this.temaService.update(tema);
+  @HttpCode(HttpStatus.OK)
+  update(@Body() Tema: Tema): Promise<Tema> {
+    return this.temaService.update(Tema);
   }
 
-  @Delete(':id')
-  delete(@Param('id') id: number) {
+  @Delete('/:id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  delete(@Param('id', ParseIntPipe) id: number){
     return this.temaService.delete(id);
   }
+
 }

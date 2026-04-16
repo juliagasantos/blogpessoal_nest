@@ -1,32 +1,40 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty } from "class-validator";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Tema } from "../../tema/entities/tema.entity";
-import { Usuario } from "../../usuario/entities/usuario.entity";
+import { Usuario } from './../../usuario/entities/usuario.entity';
 
-@Entity({ name: "tb_postagem" }) // Cria uma tabela chamada tb_postagem
+@Entity({name: "tb_postagens"})
 export class Postagem {
 
-  @PrimaryGeneratedColumn() // Cria uma chave primaria e auto increment
-  id!: number;
+    @ApiProperty()  
+    @PrimaryGeneratedColumn()    
+    id!: number
 
-  @IsNotEmpty() // Verifica se o campo esta vazio
-  @Column({ length: 100, nullable: false }) // Cria uma coluna chamada titulo, com 100 caracteres e nao pode ser nulo.
-  titulo!: string;
+    @ApiProperty()  
+    @IsNotEmpty()
+    @Column({length: 100, nullable: false})
+    titulo!: string
 
-  @IsNotEmpty()
-  @Column({ length: 1000, nullable: false })
-  texto!: string;
+    @ApiProperty()  
+    @IsNotEmpty()
+    @Column({length: 1000, nullable: false})
+    texto!: string
 
-  @UpdateDateColumn() // Cria uma coluna chamada data atualização da postagem e nao pode ser nulo
-  data!: Date;
+    @ApiProperty()  
+    @UpdateDateColumn()
+    data!: Date
+    
+    @ApiProperty({ type: () => Tema })  
+    @ManyToOne(() => Tema, (tema) => tema.postagem, {
+        onDelete: "CASCADE"
+    })
+    tema!: Tema
 
+    @ApiProperty({ type: () => Usuario })  
+    @ManyToOne(() => Usuario, (usuario) => usuario.postagem, {
+        onDelete: "CASCADE"
+    })
+    usuario!: Usuario
 
-  @ManyToOne(() => Tema, (tema) => tema.postagens)
-  @JoinColumn({ name: "tema_id" })
-  tema!: Tema;
-
-  @ManyToOne(() => Usuario, (usuario) => usuario.postagem, {
-    onDelete: "CASCADE"
-  })
-  usuario!: Usuario
 }
